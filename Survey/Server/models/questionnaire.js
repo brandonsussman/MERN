@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+
+
+const answerSchema = new mongoose.Schema({
+  answer: {
+    type: String,
+    required: true
+  },
+  question: {
+    type: Number,
+    required: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
+});
+
+module.exports = mongoose.model('Answer', answerSchema);
+
+
 const questionSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -65,7 +86,13 @@ const questionnaireSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  questions: [questionSchema]
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  questions: [questionSchema],
+  answers:[answerSchema]
 });
 
 const Questionnaire= mongoose.model('Questionnaire', questionnaireSchema,'questionnaire');
