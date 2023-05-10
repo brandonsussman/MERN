@@ -3,12 +3,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const MyForm = () => {
+  
   const [formData, setFormData] = useState({});
   const [questions, setQuestions] = useState([]);
-
+  const [questionnaireId,setQuestionnaireId]= useState([]);
 useEffect(() => {
   axios.get('http://localhost:8000/questionnaire')
     .then((response) => {
+setQuestionnaireId(response.data._id);
       const orderedQuestions = response.data.questions.map((question, index) => {
         return {
           ...question,
@@ -86,7 +88,7 @@ const handleSubmit = (event) => {
         }
       } else {
         // If no answers exist in the database, submit new answers
-        axios.post('http://localhost:8000/surveys', { answer: formData }, { headers: headers })
+        axios.post('http://localhost:8000/surveys', { answer: formData,questionnaireId:questionnaireId }, { headers: headers })
           .then((response) => {
             console.log(response.data);
           })
