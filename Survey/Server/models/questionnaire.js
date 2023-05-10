@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 
-
-const answerSchema = new mongoose.Schema({
+const answersSchema = new mongoose.Schema({
   answer: {
     type: String,
     required: true
@@ -10,15 +9,20 @@ const answerSchema = new mongoose.Schema({
   question: {
     type: Number,
     required: true
-  },
+  }
+});
+
+
+const userAnswersSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  answers: [answersSchema]
 });
 
-module.exports = mongoose.model('Answer', answerSchema);
+
 
 
 const questionSchema = new mongoose.Schema({
@@ -89,10 +93,10 @@ const questionnaireSchema = new mongoose.Schema({
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    //required: true
   },
   questions: [questionSchema],
-  answers:[answerSchema]
+  answers:[userAnswersSchema]
 });
 
 const Questionnaire= mongoose.model('Questionnaire', questionnaireSchema,'questionnaire');

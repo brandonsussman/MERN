@@ -17,66 +17,64 @@ router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
 router.get('/questionnaire', async (req, res) => {
-    try {
-      const questionnaire = await Questionnaire.findOne();
+  try {
+    const questionnaire = await Questionnaire.findOne();
+
+
+    res.json(questionnaire);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
   
-  
-      res.json(questionnaire);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
+ // Assuming you have already imported the necessary modules and models
+
+ router.post('/surveys', async (req, res, next) => {
+  try {
+    console.log('Client Token:', req.headers.authorization);
+    const decoded = jwt.verify(req.headers.authorization, 'my_secret_key');
+
+    console.log('Decoded Token:', decoded);
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).send('User not found.');
     }
-  });
-  
-  router.post('/surveys', (req, res, next) => {
+
     const survey = req.body.answer;
-  
     const answerArray = Object.entries(survey).map(([key, value]) => ({
-  
       answer: value.value,
       question: value.order
     }));
     answerArray.sort((a, b) => a.question - b.question);
+
+    const questionnaire = await Questionnaire.findById(req.body.questionnaireId);
+    if (!questionnaire) {
+      return res.status(404).json({ message: 'Questionnaire not found.' });
+    }
+
+    const questionnaireId = questionnaire._id;
+    const userId = decoded.userId;
+    const answers = answerArray;
+
+    const answerDocuments = answers.map((answer) => ({
+      answer: answer.answer,
+      question: answer.question,
+    }));
+
+    questionnaire.answers.push({ userId, answers: answerDocuments });
+    await questionnaire.save();
+
+    res.status(201).json({ message: 'Answers stored successfully.' });
+  } catch (error) {
+    console.error('Error storing answers:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// Rest of the code remains the same
+
   
-    console.log('Client Token:', req.headers.authorization);
-    jwt.verify(req.headers.authorization, 'my_secret_key', (error, decoded) => {
-      if (error) {
-        console.log('Token:', req.headers.authorization);
-        console.log('Decoded Token:', decoded);
-        console.log('Error:', error);
-        res.status(401).send('Unauthorized.');
-  
-      } else {
-        console.log('Decoded Token:', decoded);
-        User.findById(decoded.userId)
-          .then((user) => {
-            if (!user) {
-              res.status(404).send('User not found.');
-            }
-  
-  
-            else {
-  
-              user.answer = answerArray;
-  
-  
-              console.log(user);
-  
-            }
-  
-            user.save()
-              .then((savedUser) => {
-                res.send('Survey completed successfully.');
-              })
-              .catch((error) => {
-                next(error);
-              });
-          })
-          .catch((error) => {
-            next(error);
-          });
-      }
-    });
-  });
   
   router.get('/surveys', (req, res, next) => {
     const token = req.headers.authorization;
