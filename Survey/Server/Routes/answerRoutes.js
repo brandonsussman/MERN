@@ -58,12 +58,12 @@ router.get('/answer', (req, res, next) => {
     jwt.verify(token, 'my_secret_key', (error, decoded) => {
       if (error) {
         console.log('Error:', error);
-        res.status(401).send('Unauthorized.');
+        res.status(401).send('Unauthorized');
       } else {
         User.findById(decoded.userId)
           .then((user) => {
             if (!user) {
-              res.status(404).send('User not found.');
+              res.status(404).send('Error Finding User');
             } else {
               res.json(true);
             }
