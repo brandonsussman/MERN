@@ -71,16 +71,16 @@ const handleSubmit = (event) => {
     .then((response) => {
     
       // Check if answers already exist in the database
-      if (response.data.length>0) {
+      if (response) {
         // Ask user if they want to overwrite their current answers
         if (window.confirm('You already have existing answers. Do you want to overwrite them?')) {
           // If user confirms, submit new answers to database
-          axios.post('http://localhost:8000/surveys', { answer: formData }, { headers: headers })
+          axios.post('http://localhost:8000/answer', { answer: formData }, { headers: headers })
             .then((response) => {
               console.log(response.data);
             })
             .catch((error) => {
-              console.error("line 81");
+              console.error("error");
             });
         } else {
           // If user cancels, do not submit new answers to database
@@ -88,7 +88,7 @@ const handleSubmit = (event) => {
         }
       } else {
         // If no answers exist in the database, submit new answers
-        axios.post('http://localhost:8000/surveys', { answer: formData,questionnaireId:questionnaireId }, { headers: headers })
+        axios.post('http://localhost:8000/answer', { answer: formData,questionnaireId:questionnaireId }, { headers: headers })
           .then((response) => {
             console.log(response.data);
           })

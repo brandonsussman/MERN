@@ -34,7 +34,7 @@ router.post('/answer', async (req, res, next) => {
       return res.status(404).json({ message: 'Questionnaire not found.' });
     }
 
-    const questionnaireId = questionnaire._id;
+    
     const userId = decoded.userId;
     const answers = answerArray;
 
@@ -65,7 +65,7 @@ router.get('/answer', (req, res, next) => {
             if (!user) {
               res.status(404).send('User not found.');
             } else {
-              res.json(user.answer);
+              res.json(true);
             }
           })
           .catch((error) => {
