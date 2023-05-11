@@ -67,7 +67,7 @@ const handleSubmit = (event) => {
     Authorization: token
   };
 
-  axios.get('http://localhost:8000/surveys', { headers: headers })
+  axios.get('http://localhost:8000/answer', {params:{questionnaireId:questionnaireId} ,headers: headers })
     .then((response) => {
     
       // Check if answers already exist in the database
@@ -80,7 +80,7 @@ const handleSubmit = (event) => {
               console.log(response.data);
             })
             .catch((error) => {
-              console.error("error");
+              console.error("error",error);
             });
         } else {
           // If user cancels, do not submit new answers to database
