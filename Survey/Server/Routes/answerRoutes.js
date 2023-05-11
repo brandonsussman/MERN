@@ -54,18 +54,24 @@ router.post('/answer', async (req, res, next) => {
 });
 
 router.get('/answer', (req, res, next) => {
-    const token = req.headers.authorization;
+
+  const token = req.headers.authorization;
+  console.log(token);
     jwt.verify(token, 'my_secret_key', (error, decoded) => {
       if (error) {
+        console.log(decoded);
         console.log('Error:', error);
         res.status(401).send('Unauthorized');
       } else {
-        User.findById(decoded.userId)
-          .then((user) => {
-            if (!user) {
-              res.status(404).send('Error Finding User');
-            } else {
-              res.json(true);
+        console.log("userid:",decoded.userId);
+        Questionnaire.findById(req.query.questionnaireId)
+        .then((questionnaire)=>{
+          const userAnswer = questionnaire.answers.find((answer) => answer.userId === decoded.userId);
+    if (!userAnswer) {
+      return res.send(false);
+    }
+            else {
+              res.send(true);
             }
           })
           .catch((error) => {
