@@ -66,12 +66,13 @@ router.get('/answer', (req, res, next) => {
         console.log("userid:",decoded.userId);
         Questionnaire.findById(req.query.questionnaireId)
         .then((questionnaire)=>{
-          const userAnswer = questionnaire.answers.find((answer) => answer.userId === decoded.userId);
-    if (!userAnswer) {
-      return res.send(false);
+          const userAnswer = questionnaire.answers.find(answer => answer.userId.toString() === decoded.userId.toString());
+          if (!userAnswer) {
+ 
+     res.send(false);
     }
             else {
-              res.send(true);
+          res.send(true);
             }
           })
           .catch((error) => {
