@@ -29,16 +29,19 @@ router.get('/questionnaire', async (req, res) => {
 
 router.post('/questionnaire', async (req, res) => {
   try {
+   
     const { title, questions } = req.body;
-
+console.log(title);
+console.log(questions);
     const questionnaire = new Questionnaire({
-      title,
-      questions
+      title:title,
+      questions:questions
     });
 
     const newQuestionnaire = await questionnaire.save();
     res.status(201).json(newQuestionnaire);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message });
   }
 });
