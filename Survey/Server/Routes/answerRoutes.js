@@ -24,6 +24,7 @@ router.post('/answer', async (req, res, next) => {
     }
 
     const survey = req.body.answer;
+    console.log(survey);
     const answerArray = Object.entries(survey).map(([key, value]) => ({
       answer: value.value,
       question: value.order

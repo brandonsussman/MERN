@@ -65,6 +65,7 @@ const MyForm = () => {
   };
 
   const handleSubmit = (event) => {
+    console.log(formData);
     event.preventDefault();
     const token = Cookies.get('token');
 
@@ -81,7 +82,7 @@ const MyForm = () => {
           // Ask user if they want to overwrite their current answers
           if (window.confirm('You already have existing answers. Do you want to overwrite them?')) {
             // If user confirms, submit new answers to database
-            axios.post('http://localhost:8000/answer', { answer: formData }, { headers: headers })
+            axios.post('http://localhost:8000/answer', {questionnaireId: questionnaireId, answer: formData }, { headers: headers })
               .then((response) => {
                 console.log(response.data);
               })
