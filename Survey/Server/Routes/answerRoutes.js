@@ -1,3 +1,4 @@
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -80,7 +81,7 @@ router.get('/answer', (req, res, next) => {
           });
       }
     });
-  });
+});
 
 router.get('/export-answers', async (req, res, next) => {
     const token = req.headers.authorization;

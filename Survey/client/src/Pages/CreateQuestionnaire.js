@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-
+import axios from 'axios';
 function CreateQuestionnaire() {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -55,6 +55,17 @@ function CreateQuestionnaire() {
     const questionnaire = { title, questions };
     const json = JSON.stringify(questionnaire);
     console.log(json);
+
+    axios.post('http://localhost:8000/questionnaire', questionnaire)
+    .then((response) => {
+      console.log('Questionnaire created successfully:', response.data);
+      // Perform any additional actions after creating the questionnaire
+    })
+    .catch((error) => {
+      console.error('Failed to create questionnaire:', error);
+      // Handle the error condition
+    });
+
   };
   return (
     
