@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const MyForm = () => {
-
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+ 
   const [formData, setFormData] = useState({});
   const [questions, setQuestions] = useState([]);
-  const [questionnaireId, setQuestionnaireId] = useState([]);
+  const [questionnaireId, setQuestionnaireId] = useState(searchParams.get('id'));
   useEffect(() => {
-    axios.get('http://localhost:8000/questionnaire')
+    console.log(questionnaireId);
+    axios.get('http://localhost:8000/questionnaire',
+    { params: { questionnaireId: questionnaireId }})
       .then((response) => {
         setQuestionnaireId(response.data._id);
         const orderedQuestions = response.data.questions.map((question, index) => {

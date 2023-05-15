@@ -18,7 +18,7 @@ router.use(express.urlencoded({ extended: true }));
 
 router.get('/questionnaire', async (req, res) => {
   try {
-    const questionnaire = await Questionnaire.findOne();
+    const questionnaire = await Questionnaire.findOne({_id:req.query.questionnaireId});
 
 
     res.json(questionnaire);
@@ -53,7 +53,7 @@ router.get('/questionnaires', async (req, res) => {
         $regex: req.query.search,
         $options: "i" // optional case-insensitive flag
       }
-    },'title creator')
+    },'title')
 
 
     res.json(questionnaire);

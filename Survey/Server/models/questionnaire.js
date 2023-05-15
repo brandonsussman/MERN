@@ -26,13 +26,7 @@ const userAnswersSchema = new mongoose.Schema({
 
 
 const questionSchema = new mongoose.Schema({
-  id: {
-    type: String,
-    required: true,
-    default: () => {
-      return new mongoose.Types.ObjectId().toString();
-    }
-  },
+
   text: {
     type: String,
     required: true
