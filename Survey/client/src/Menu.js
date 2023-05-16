@@ -41,19 +41,28 @@ function Menu() {
         <li>
           <NavLink exact to="/">Home</NavLink>
         </li>
-       
+        <li>
+          <NavLink to="/questionnaire">Questionnaire</NavLink>
+        </li>
+         
         {isLoggedIn ? (
+          <div>
+               <li>
+             <NavLink to="/user">Profile</NavLink>
+           </li>
+           <li>
+             <NavLink to="/createQuestionnaire">Create Questionnaire</NavLink>
+           </li>
           <li>
             <button onClick={handleLogout}>Logout</button>
           </li>
+          
+           </div>
         ) : (
           <li>
             <NavLink to="/login">Login</NavLink>
           </li>
         )}
-        <li>
-          <NavLink to="/questionnaire">Questionnaire</NavLink>
-        </li>
       </ul>
     </nav>
   );
