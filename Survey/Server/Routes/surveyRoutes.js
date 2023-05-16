@@ -57,17 +57,30 @@ router.post('/questionnaire', async (req, res) => {
 });
 
 
+
 router.get('/questionnaires', async (req, res) => {
-  try {
-    const questionnaire = await Questionnaire.find({
-      title: {
-        $regex: req.query.search,
-        $options: "i" // optional case-insensitive flag
+  const searchQuestionnaires = async (search, creator) => {
+    try {
+      let query = { title: { $regex: search, $options: "i" } };
+  
+      if (creator) {
+        query.creator = creator;
       }
-    },'title')
-
-
-    res.json(questionnaire);
+  
+      const questionnaires = await Questionnaire.find(query);
+  
+      return questionnaires;
+    } catch (err) {
+      throw new Error(err.message);
+    }
+  };
+  
+  try {
+    if (req.headers) {
+      res.json(await searchQuestionnaires(req.query.search, null));
+    } else {
+      res.json(await searchQuestionnaires(req.query.search, null));
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

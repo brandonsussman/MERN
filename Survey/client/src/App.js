@@ -6,6 +6,7 @@ import RegisterPage from './Pages/RegisterPage';
 import Questionnaire from './Pages/Questionnaire';
 import DownloadAnswers from './Pages/DownloadAnswers';
 import CreateQuestionnaire from './Pages/CreateQuestionnaire';
+import User from './Pages/User';
 import Menu from './Menu';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/createquestionnaire" element={<CreateQuestionnaire />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
+        <Route path="/user" element={<User/>} />
         <Route path="/DownloadAnswers" element={<DownloadAnswers/>} />
       </Routes>
     </BrowserRouter>
