@@ -16,6 +16,35 @@ router.use(cors());
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
+//Functions
+const verifyTokenReturnUser = async (token) => {
+  try {
+    const decoded = jwt.verify(token, 'my_secret_key');
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return Promise.reject(new Error('User not found.'));
+    }
+    return user;
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+const searchQuestionnaires = async (search, creator) => {
+  try {
+    let query = { title: { $regex: search, $options: "i" } };
+
+    if (creator) {
+      query.creator = creator;
+    }
+
+    const questionnaires = await Questionnaire.find(query);
+
+    return questionnaires;
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
 router.get('/questionnaire', async (req, res) => {
   try {
     const questionnaire = await Questionnaire.findOne({_id:req.query.questionnaireId});
@@ -30,14 +59,10 @@ router.get('/questionnaire', async (req, res) => {
 
 
 router.post('/questionnaire', async (req, res) => {
-  const token = req.headers.authorization;
   try {
-    const decoded = jwt.verify(token, 'my_secret_key');
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      return res.status(404).send('User not found.');
-    }
-
+    const token = req.headers.authorization;
+    const user = await verifyTokenReturnUser(token);
+    
     const { title, questions } = req.body.questionnaire;
     console.log(title);
     console.log(questions);
@@ -58,28 +83,18 @@ router.post('/questionnaire', async (req, res) => {
 
 
 
+
 router.get('/questionnaires', async (req, res) => {
-  const searchQuestionnaires = async (search, creator) => {
-    try {
-      let query = { title: { $regex: search, $options: "i" } };
-  
-      if (creator) {
-        query.creator = creator;
-      }
-  
-      const questionnaires = await Questionnaire.find(query);
-  
-      return questionnaires;
-    } catch (err) {
-      throw new Error(err.message);
-    }
-  };
-  
   try {
+    
     if (req.headers) {
-      res.json(await searchQuestionnaires(req.query.search, null));
+      const token = req.headers.authorization;
+      const user = await verifyTokenReturnUser(token);
+      res.json(await searchQuestionnaires(req.query.search,user._id));
     } else {
-      res.json(await searchQuestionnaires(req.query.search, null));
+  
+    
+      res.json(await searchQuestionnaires(req.query.search));
     }
   } catch (err) {
     res.status(500).json({ message: err.message });

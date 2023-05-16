@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 function User() {
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
+  const token = Cookies.get('token');
+ 
 
   const useFetchData = (url) => {
     const fetchData = async (search) => {
@@ -17,10 +19,11 @@ function User() {
         const response = await axios.get(url, {
           params: {
             search: search
+          },  headers:{
+            authorization: token
           }
           
         });
-console.log(response.data);
         setData(response.data);
         setLoading(false);
       } catch (error) {
