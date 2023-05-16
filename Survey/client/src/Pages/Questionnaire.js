@@ -7,7 +7,7 @@ const MyForm = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
  
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [questionnaireId, setQuestionnaireId] = useState(searchParams.get('id'));
   useEffect(() => {
@@ -29,20 +29,20 @@ const MyForm = () => {
         orderedQuestions.forEach((question) => {
           switch (question.type) {
             case 'text':
-              defaultValues[question.id] = { value: " ", order: question.order };
+              defaultValues[question._id] = { value: " ", order: question.order };
               break;
             case 'date':
 
-              defaultValues[question.id] = { value: new Date().toISOString().substr(0, 10), order: question.order };
+              defaultValues[question._id] = { value: new Date().toISOString().substr(0, 10), order: question.order };
               break;
             case 'range':
-              defaultValues[question.id] = { value: question.min, order: question.order };
+              defaultValues[question._id] = { value: question.min, order: question.order };
               break;
             case 'radio':
-              defaultValues[question.id] = { value: question.options[0].value, order: question.order };
+              defaultValues[question._id] = { value: question.options[0].value, order: question.order };
               break;
             case 'select':
-              defaultValues[question.id] = { value: question.options[0].value, order: question.order };
+              defaultValues[question._id] = { value: question.options[0].value, order: question.order };
               break;
             default:
               break;
@@ -123,42 +123,42 @@ const MyForm = () => {
         switch (question.type) {
           case 'text':
             return (
-              <div key={question.id}>
-                <label htmlFor={question.id}>{question.text}</label>
-                <input type="text" name={question.id} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id}>
+                <label htmlFor={question._id}>{question.text}</label>
+                <input type="text" name={question._id} onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'date':
             return (
-              <div key={question.id}>
-                <label htmlFor={question.id}>{question.text}</label>
-                <input type="date" name={question.id} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id}>
+                <label htmlFor={question._id}>{question.text}</label>
+                <input type="date" name={question._id} onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'range':
             return (
-              <div key={question.id}>
-                <label htmlFor={question.id}>{question.text}</label>
-                <input type="range" name={question.id} min={question.min} max={question.max} step={question.step} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id}>
+                <label htmlFor={question._id}>{question.text}</label>
+                <input type="range" name={question._id} min={question.min} max={question.max} step={question.step} onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'radio':
             return (
-              <div key={question.id}>
+              <div key={question._id}>
                 <p>{question.text}</p>
                 {question.options.map((option) => (
                   <div key={option.value}>
                     <label htmlFor={option.value}>{option.text}</label>
-                    <input type="radio" name={question.id} value={option.value} id={option.value} onChange={(event) => handleChange(event, question.order)} />
+                    <input type="radio" name={question._id} value={option.value} id={option.value} onChange={(event) => handleChange(event, question.order)} />
                   </div>
                 ))}
               </div>
             );
           case 'select':
             return (
-              <div key={question.id}>
-                <label htmlFor={question.id}>{question.text}</label>
-                <select name={question.id} onChange={(event) => handleChange(event, question.order)}>
+              <div key={question._id}>
+                <label htmlFor={question._id}>{question.text}</label>
+                <select name={question._id} onChange={(event) => handleChange(event, question.order)}>
                   {question.options.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.text}
