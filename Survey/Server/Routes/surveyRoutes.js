@@ -27,24 +27,35 @@ router.get('/questionnaire', async (req, res) => {
   }
 });
 
+
+
 router.post('/questionnaire', async (req, res) => {
+  const token = req.headers.authorization;
   try {
-   
-    const { title, questions } = req.body;
-console.log(title);
-console.log(questions);
+    const decoded = jwt.verify(token, 'my_secret_key');
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+
+    const { title, questions } = req.body.questionnaire;
+    console.log(title);
+    console.log(questions);
+
     const questionnaire = new Questionnaire({
-      title:title,
-      questions:questions
+      creator: user._id,
+      title: title,
+      questions: questions
     });
 
     const newQuestionnaire = await questionnaire.save();
     res.status(201).json(newQuestionnaire);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    console.log('Error:', error);
+    res.status(401).send('Unauthorized.');
   }
 });
+
 
 router.get('/questionnaires', async (req, res) => {
   try {
@@ -64,26 +75,6 @@ router.get('/questionnaires', async (req, res) => {
   
 
 
-  router.get('/surveys', (req, res, next) => {
-    const token = req.headers.authorization;
-    jwt.verify(token, 'my_secret_key', (error, decoded) => {
-      if (error) {
-        console.log('Error:', error);
-        res.status(401).send('Unauthorized.');
-      } else {
-        User.findById(decoded.userId)
-          .then((user) => {
-            if (!user) {
-              res.status(404).send('User not found.');
-            } else {
-              res.json(user.answer);
-            }
-          })
-          .catch((error) => {
-            next(error);
-          });
-      }
-    });
-  });
+
 
   module.exports=router;

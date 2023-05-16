@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 function CreateQuestionnaire() {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -28,7 +28,7 @@ function CreateQuestionnaire() {
   };
 
   const handleAddQuestion = () => {
-    const newQuestion = { text: '', type: 'text', options: [], order: questions.length + 1 };
+    const newQuestion = { text: '', type: 'text', options: [], order: questions.length};
     const newQuestions = [...questions, newQuestion];
     setQuestions(newQuestions);
   };
@@ -36,6 +36,10 @@ function CreateQuestionnaire() {
   const handleRemoveQuestion = (index) => {
     const newQuestions = [...questions];
     newQuestions.splice(index, 1);
+    // Update the order of the remaining questions
+    newQuestions.forEach((question, i) => {
+      question.order = i + 1;
+    });
     setQuestions(newQuestions);
   };
 
@@ -53,10 +57,15 @@ function CreateQuestionnaire() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = Cookies.get('token');
+
+    const headers = {
+      Authorization: token
+    };
     const questionnaire = { title, questions };
 
     axios
-      .post('http://localhost:8000/questionnaire', questionnaire)
+      .post('http://localhost:8000/questionnaire', {questionnaire:questionnaire},{headers:headers})
       .then((response) => {
         console.log('Questionnaire created successfully:', response.data);
         // Perform any additional actions after creating the questionnaire
@@ -66,6 +75,9 @@ function CreateQuestionnaire() {
         // Handle the error condition
       });
   };
+
+
+
   return (
     <div>
       <h2>{title}</h2>
