@@ -20,6 +20,7 @@ router.post('/register', async (req, res, next) => {
 
 
 router.get('/check-login', (req, res) => {
+  
   const token = req.headers.authorization;
   if (!token) {
     res.status(401).json({ message: 'Authorization header missing' });
