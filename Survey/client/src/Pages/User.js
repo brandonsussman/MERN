@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import DownloadAnswers from './DownloadAnswers';
 function User() {
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
@@ -62,7 +63,9 @@ function User() {
       ) : (
         <ul>
           {data.map((item) => (
-            <li key={item._id}>{item.title}</li>
+            <li key={item._id}>{item.title}
+            <DownloadAnswers questionnaireId={item._id}></DownloadAnswers>
+            </li>
           ))}
         </ul>
       )}

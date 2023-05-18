@@ -85,6 +85,7 @@ router.post('/questionnaire', async (req, res) => {
 
 
 router.get('/questionnaires', async (req, res) => {
+  console.log(req);
   try {
     
     if (req.headers) {
@@ -98,6 +99,7 @@ router.get('/questionnaires', async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
+    console.log(err);
   }
 });
   

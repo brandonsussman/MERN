@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const DownloadAnswers = () => {
+const DownloadAnswers = (props) => {
   const token = Cookies.get('token');
 
   const headers = {
@@ -14,7 +14,13 @@ const DownloadAnswers = () => {
       return;
     }
 
-    axios.get('http://localhost:8000/export-answers', { headers, responseType: 'blob' })
+    axios.get('http://localhost:8000/export-answers', {
+      headers,
+      responseType: 'blob',
+      params: {
+        questionnaireId: props.questionnaireId
+      }
+    })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
@@ -24,7 +30,7 @@ const DownloadAnswers = () => {
         link.click();
       })
       .catch((error) => {
-        if (error.response.status === 404 && error.response.data.message) {
+        if (error.response && error.response.status === 404 && error.response.data.message) {
           alert(error.response.data.message);
         } else {
           console.error(error);

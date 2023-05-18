@@ -68,7 +68,7 @@ router.get('/answer', (req, res, next) => {
         console.log("userid:",decoded.userId);
         Questionnaire.findById(req.query.questionnaireId)
         .then((questionnaire)=>{
-          const userAnswer = questionnaire.answers.find(answer => answer.userId.toString() === decoded.userId.toString());
+          const userAnswer = questionnaire.answers.find(answer => answer.toString() === decoded.userId.toString());
           if (!userAnswer) {
  
      res.send(false);
@@ -84,33 +84,53 @@ router.get('/answer', (req, res, next) => {
     });
 });
 
+
+
 router.get('/export-answers', async (req, res, next) => {
-    const token = req.headers.authorization;
-    if (!token) {
-      res.status(401).json({ message: 'Authorization header missing' });
-    } else {
-      try {
-        const decoded = await jwt.verify(token, 'my_secret_key');
-        const user = await User.findById(decoded.userId);
-        if (!user) {
-          res.status(404).json({ message: 'User not found' });
-        } else if (!user.answer || user.answer.length === 0) {
-          res.status(404).json({ message: `${user.name} has no answers`});
+  console.log("hello");
+  console.log(req.query.questionnaireId);
+  const token = req.headers.authorization;
+  if (!token) {
+    res.status(401).json({ message: 'Authorization header missing' });
+  } else {
+    try {
+      const decoded = await jwt.verify(token, 'my_secret_key');
+      const user = await User.findById(decoded.userId);
+      if (!user) {
+        res.status(404).json({ message: 'User not found' });
+      } else {
+        const questionnaireId = req.query.questionnaireId;
+        const questionnaire = await Questionnaire.findById(questionnaireId).populate('answers.userId');
+        if (!questionnaire) {
+          res.status(404).json({ message: 'Questionnaire not found' });
+        } else if (!questionnaire.answers || questionnaire.answers.length === 0) {
+          res.status(404).json({ message: 'No answers found for the questionnaire' });
+         
         } else {
-          const fields = ['question', 'answer'];
-          const csvData = json2csv(user.answer, { fields });
-          const filename = `${user.name}_answers.csv`;
+          const fields = ['User', 'Question', 'Answer'];
+          const csvData = questionnaire.answers.reduce((acc, userAnswers) => {
+            const userName = userAnswers.userId.name;
+            const userAnswerData = userAnswers.answers.map(answer => ({
+              User: userName,
+              Question: answer.question,
+              Answer: answer.answer
+            }));
+            return acc.concat(userAnswerData);
+          }, []);
+          const csv = json2csv(csvData, { fields });
+          const filename = `${questionnaire.title}_answers.csv`;
           const filepath = path.join(os.tmpdir(), filename);
-          fs.writeFileSync(filepath, csvData);
+          fs.writeFileSync(filepath, csv);
           res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
           res.set('Content-Type', 'text/csv');
-          res.status(200).send(csvData);
+          res.status(200).send(csv);
           fs.unlinkSync(filepath);
         }
-      } catch (err) {
-        res.status(401).json({ message: 'Invalid token' });
       }
+    } catch (err) {
+      res.status(401).json({ message: 'Invalid token' });
     }
-  });
-  
+  }
+});
+
 module.exports =router;
