@@ -33,7 +33,7 @@ const verifyTokenReturnUser = async (token) => {
 const searchQuestionnaires = async (search, creator) => {
   try {
     let query = { title: { $regex: search, $options: "i" } };
-
+ console.log(query);
     if (creator) {
       query.creator = creator;
     }
@@ -42,6 +42,7 @@ const searchQuestionnaires = async (search, creator) => {
 
     return questionnaires;
   } catch (err) {
+    
     throw new Error(err.message);
   }
 };
@@ -85,17 +86,19 @@ router.post('/questionnaire', async (req, res) => {
 
 
 router.get('/questionnaires', async (req, res) => {
-  console.log(req);
+ 
+  
   try {
     
-    if (req.headers) {
+    if (req.headers.authorization) {
+      console.log("this code has run");
       const token = req.headers.authorization;
       const user = await verifyTokenReturnUser(token);
       res.json(await searchQuestionnaires(req.query.search,user._id));
     } else {
   
-    
-      res.json(await searchQuestionnaires(req.query.search));
+    console.log("hello else statement run");
+      res.json(await searchQuestionnaires(req.query.search,null));
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
