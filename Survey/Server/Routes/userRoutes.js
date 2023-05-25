@@ -40,7 +40,7 @@ router.post('/login', (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
       if (!user) {
-        res.status(401).send('Invalid email or password.');
+        res.status(401).send('Invalid email or password');
       }
       if (!bcrypt.compareSync(req.body.password, user.password)) {
         res.status(401).send('Invalid email or password.');

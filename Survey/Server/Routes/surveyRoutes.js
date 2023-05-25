@@ -30,15 +30,27 @@ const verifyTokenReturnUser = async (token) => {
   }
 };
 
-const searchQuestionnaires = async (search, creator) => {
+const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
   try {
-    let query = { title: { $regex: search, $options: "i" } };
- console.log(query);
+    query = {};
+
+    if(search){
+
+    query.title={ $regex: search, $options: "i" };
+
+    }
     if (creator) {
       query.creator = creator;
     }
+    if(answeredBy){
+console.log(answeredBy);
+query.answers = {userId: answeredBy };
+console.log(query);
+    }
+    
 
     const questionnaires = await Questionnaire.find(query);
+    console.log(questionnaires)
 
     return questionnaires;
   } catch (err) {
@@ -61,7 +73,7 @@ router.post('/questionnaire', async (req, res) => {
   try {
     const token = req.headers.authorization;
     const user = await verifyTokenReturnUser(token);
-    
+     
     const { title, questions } = req.body.questionnaire;
     const questionnaire = new Questionnaire({
       creator: user._id,
@@ -83,10 +95,12 @@ router.get('/questionnaires', async (req, res) => {
     
     if (req.headers.authorization) {
       const token = req.headers.authorization;
+      
       const user = await verifyTokenReturnUser(token);
-      res.json(await searchQuestionnaires(req.query.search,user._id));
+     
+      res.json(await searchQuestionnaires({search:req.query.search,creator:user._id}));
     } else {
-      res.json(await searchQuestionnaires(req.query.search,null));
+      res.json(await searchQuestionnaires({search:req.query.search}));
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -95,7 +109,21 @@ router.get('/questionnaires', async (req, res) => {
 });
   
 
-
+router.get('/questionnairesAnswered', async (req, res) => {
+  try {
+    
+    if (req.headers.authorization) {
+      
+      const token = req.headers.authorization;
+      const user = await verifyTokenReturnUser(token);
+       console.log(user._id);
+      res.json(await searchQuestionnaires({answeredBy:user._id}));
+    } 
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+    console.log(err);
+  }
+});
 
 
   module.exports=router;

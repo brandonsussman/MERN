@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 const MyForm = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
- 
+ const [title,setTitle]=useState("");
   const [formData, setFormData] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [questionnaireId, setQuestionnaireId] = useState(searchParams.get('id'));
@@ -16,6 +16,7 @@ const MyForm = () => {
     { params: { questionnaireId: questionnaireId }})
       .then((response) => {
         setQuestionnaireId(response.data._id);
+         setTitle(response.data.title);
         const orderedQuestions = response.data.questions.map((question, index) => {
           return {
             ...question,
@@ -65,7 +66,7 @@ const MyForm = () => {
   };
 
   const handleSubmit = (event) => {
-    console.log(formData);
+   
     event.preventDefault();
     const token = Cookies.get('token');
 
@@ -77,15 +78,13 @@ const MyForm = () => {
       .then((response) => {
 
         // Check if answers already exist in the database
-        console.log(response.data);
+     
         if (response.data) {
           // Ask user if they want to overwrite their current answers
           if (window.confirm('You already have existing answers. Do you want to overwrite them?')) {
             // If user confirms, submit new answers to database
             axios.post('http://localhost:8000/answer', {questionnaireId: questionnaireId, answer: formData }, { headers: headers })
-              .then((response) => {
-                console.log(response.data);
-              })
+
               .catch((error) => {
                 console.error("error", error);
               });
@@ -117,9 +116,10 @@ const MyForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h1>{questions.title}</h1>
+      <h1>{title}</h1>
 
       {questions.map((question) => {
+        console.log(questions);
         switch (question.type) {
           case 'text':
             return (

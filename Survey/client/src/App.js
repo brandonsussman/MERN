@@ -4,7 +4,7 @@ import HomePage from './Pages/HomePage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
 import Questionnaire from './Pages/Questionnaire';
-import DownloadAnswers from './Pages/DownloadAnswers';
+import DownloadAnswers from './Components/DownloadAnswers';
 import CreateQuestionnaire from './Pages/CreateQuestionnaire';
 import User from './Pages/User';
 import Menu from './Menu';

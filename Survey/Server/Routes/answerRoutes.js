@@ -1,4 +1,3 @@
-
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -13,10 +12,9 @@ const router = express.Router();
 
 router.post('/answer', async (req, res, next) => {
   try {
-    console.log('Client Token:', req.headers.authorization);
+   
     const decoded = jwt.verify(req.headers.authorization, 'my_secret_key');
 
-    console.log('Decoded Token:', decoded);
     const user = await User.findById(decoded.userId);
 
     if (!user) {
@@ -58,7 +56,6 @@ router.post('/answer', async (req, res, next) => {
 router.get('/answer', (req, res, next) => {
 
   const token = req.headers.authorization;
-  console.log(token);
     jwt.verify(token, 'my_secret_key', (error, decoded) => {
       if (error) {
         console.log(decoded);
@@ -84,11 +81,7 @@ router.get('/answer', (req, res, next) => {
     });
 });
 
-
-
 router.get('/export-answers', async (req, res, next) => {
-  console.log("hello");
-  console.log(req.query.questionnaireId);
   const token = req.headers.authorization;
   if (!token) {
     res.status(401).json({ message: 'Authorization header missing' });
