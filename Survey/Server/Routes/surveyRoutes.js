@@ -10,13 +10,13 @@ const User = require('../models/user');
 
 const router = express.Router();
 
-// Enable cross-origin requests
 router.use(cors());
 
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 
-//Functions
+
+
 const verifyTokenReturnUser = async (token) => {
   try {
     const decoded = jwt.verify(token, 'my_secret_key');
@@ -57,17 +57,12 @@ router.get('/questionnaire', async (req, res) => {
   }
 });
 
-
-
 router.post('/questionnaire', async (req, res) => {
   try {
     const token = req.headers.authorization;
     const user = await verifyTokenReturnUser(token);
     
     const { title, questions } = req.body.questionnaire;
-    console.log(title);
-    console.log(questions);
-
     const questionnaire = new Questionnaire({
       creator: user._id,
       title: title,
@@ -83,21 +78,14 @@ router.post('/questionnaire', async (req, res) => {
 });
 
 
-
-
 router.get('/questionnaires', async (req, res) => {
- 
-  
   try {
     
     if (req.headers.authorization) {
-      console.log("this code has run");
       const token = req.headers.authorization;
       const user = await verifyTokenReturnUser(token);
       res.json(await searchQuestionnaires(req.query.search,user._id));
     } else {
-  
-    console.log("hello else statement run");
       res.json(await searchQuestionnaires(req.query.search,null));
     }
   } catch (err) {

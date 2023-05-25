@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
 import axios from 'axios';
-
 const SearchBar = () => {
-  const [data, setData] = useState(null);
-  const [search, setSearch] = useState(""); // Initialize search state as an empty string
+  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    if (search !== "") { // Check if search is not empty
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    try {
+      
       axios.get('http://localhost:8000/questionnaires', {
           params: {
             search: search
@@ -19,25 +21,21 @@ const SearchBar = () => {
           console.error(error);
         });
     }
-  }, [search]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSearch(event.target.elements.search.value);
+    catch(error){
+      
+    }
   };
 
   const handleClick = (surveyId) => {
-
-  
     navigate({
-        pathname: `/questionnaire`,
-        search: `?id=${surveyId}`
-      });
+      pathname: `/questionnaire`,
+      search: `?id=${surveyId}`
+    });
   };
 
   return (
     <div>
-      <h1>{search || "Hello"}</h1>
+      <h1>Browse Surveys Here</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -45,8 +43,9 @@ const SearchBar = () => {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
+        <button type="submit">Search</button>
       </form>
-      {data && data.length > 0 ? (
+      {data.length > 0 ? (
         <ul>
           {data.map((survey) => (
             <li key={survey._id} onClick={() => handleClick(survey._id)}>
@@ -60,5 +59,4 @@ const SearchBar = () => {
     </div>
   );
 };
-
 export default SearchBar;
