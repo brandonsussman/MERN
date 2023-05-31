@@ -20,7 +20,9 @@ const SearchBar = () => {
             authorization: token
           }
         })
-        .then((response) => setData(response.data))
+        .then((response) =>{
+          console.log(response);
+          setData(response.data)})
 
         .catch(error => {
           console.error(error);

@@ -37,14 +37,17 @@ const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
     if(search){
 
     query.title={ $regex: search, $options: "i" };
+    console.log(query);
 
     }
     if (creator) {
       query.creator = creator;
+      console.log(query);
     }
     if(answeredBy){
-console.log(answeredBy);
-query.answers = {userId: answeredBy };
+    
+
+      query["answers.userId"] = answeredBy;
 console.log(query);
     }
     
@@ -118,6 +121,7 @@ router.get('/questionnairesAnswered', async (req, res) => {
       const token = req.headers.authorization;
       const user = await verifyTokenReturnUser(token);
        console.log(user._id);
+      
       res.json(await searchQuestionnaires({answeredBy:user._id}));
     } 
   } catch (err) {
