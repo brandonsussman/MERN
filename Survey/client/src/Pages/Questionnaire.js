@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-
+import Menu from './..//Menu.js';
+import '../CSS/Questionnaire.css'
 const MyForm = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -115,40 +116,41 @@ const MyForm = () => {
 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>{title}</h1>
-
+    <div>
+            <Menu></Menu>
+    <form className="survey-form" onSubmit={handleSubmit}>
+      <h1 className="survey-title">{title}</h1>
+  
       {questions.map((question) => {
-        console.log(questions);
         switch (question.type) {
           case 'text':
             return (
-              <div key={question._id}>
-                <label htmlFor={question._id}>{question.text}</label>
-                <input type="text" name={question._id} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id} className="form-group">
+                <label htmlFor={question._id} className="question-label">{question.text}</label>
+                <input type="text" name={question._id} className="text-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'date':
             return (
-              <div key={question._id}>
-                <label htmlFor={question._id}>{question.text}</label>
-                <input type="date" name={question._id} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id} className="form-group">
+                <label htmlFor={question._id} className="question-label">{question.text}</label>
+                <input type="date" name={question._id} className="date-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'range':
             return (
-              <div key={question._id}>
-                <label htmlFor={question._id}>{question.text}</label>
-                <input type="range" name={question._id} min={question.min} max={question.max} step={question.step} onChange={(event) => handleChange(event, question.order)} />
+              <div key={question._id} className="form-group">
+                <label htmlFor={question._id} className="question-label">{question.text}</label>
+                <input type="range" name={question._id} min={question.min} max={question.max} step={question.step} className="range-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'radio':
             return (
-              <div key={question._id}>
-                <p>{question.text}</p>
+              <div key={question._id} className="form-group">
+                <p className="question-label">{question.text}</p>
                 {question.options.map((option) => (
-                  <div key={option.value}>
-                    <label htmlFor={option.value}>{option.text}</label>
+                  <div key={option.value} className="radio-option">
+                    <label htmlFor={option.value} className="option-label">{option.text}</label>
                     <input type="radio" name={question._id} value={option.value} id={option.value} onChange={(event) => handleChange(event, question.order)} />
                   </div>
                 ))}
@@ -156,9 +158,9 @@ const MyForm = () => {
             );
           case 'select':
             return (
-              <div key={question._id}>
-                <label htmlFor={question._id}>{question.text}</label>
-                <select name={question._id} onChange={(event) => handleChange(event, question.order)}>
+              <div key={question._id} className="form-group">
+                <label htmlFor={question._id} className="question-label">{question.text}</label>
+                <select name={question._id} className="select-input" onChange={(event) => handleChange(event, question.order)}>
                   {question.options.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.text}
@@ -171,9 +173,11 @@ const MyForm = () => {
             return null;
         }
       })}
-      <button type="submit">Submit</button>
+      <button type="submit" className="submit-button">Submit</button>
     </form>
+    </div>
   );
+  
 
 };
 
