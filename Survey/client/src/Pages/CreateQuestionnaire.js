@@ -24,6 +24,7 @@ function CreateQuestionnaire() {
   const handleOptionChange = (questionIndex, optionIndex, e) => {
     const newQuestions = [...questions];
     newQuestions[questionIndex].options[optionIndex].text = e.target.value;
+    newQuestions[questionIndex].options[optionIndex].value = e.target.value;
     setQuestions(newQuestions);
   };
 
@@ -71,6 +72,8 @@ function CreateQuestionnaire() {
         // Perform any additional actions after creating the questionnaire
       })
       .catch((error) => {
+
+        console.log(questionnaire.questions);
         console.error('Failed to create questionnaire:', error);
         // Handle the error condition
       });
@@ -120,31 +123,23 @@ function CreateQuestionnaire() {
               />
             )}
             {question.type === 'radio' && (
-              <div>
-                {question.options.map((option, optionIndex) => (
-                  <label key={optionIndex}>
-                    <input
-                      type="text"
-                      key={optionIndex}
-                      value={option.text}
-                      onChange={(e) => handleOptionChange(index, optionIndex, e)}
-                    />
-                    {option.text}
-                  </label>
-                ))}
-              </div>
-            )}
-            {question.type === 'select' && (
-              <div>
-                {question.options.map((option, optionIndex) => (
                   <input
-                    type="text"
-                    key={optionIndex}
-                    value={option.text}
-                    onChange={(e) => handleOptionChange(index, optionIndex, e)}
-                  />
-                ))}
-              </div>
+                  type="text"
+                  name={index}
+                  value={question.text}
+                  onChange={(e) => handleQuestionChange(e, index)}
+                />
+             )}
+             
+            
+            {question.type === 'select' && (
+                  <input
+                  type="text"
+                  name={index}
+                  value={question.text}
+                  onChange={(e) => handleQuestionChange(e, index)}
+                />
+           
             )}
             <button type="button" onClick={() => handleRemoveQuestion(index)}>
               Remove Question

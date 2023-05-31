@@ -1,1 +1,33 @@
-.ques
+.lblQuestion{
+     font-size: 20px;
+}
+
+.grid-containerTextInput {
+    display: grid;
+    grid-template-columns: 1fr; /* One column */
+    grid-template-rows: auto auto; /* Two rows */
+    
+    gap:2px /* Gap between grid items */
+  }
+
+  .grid-containerForm {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr 0.5fr; /* Three columns with the middle column taking available space */
+    
+    align-items: center; /* Center the grid items vertically */
+    height: 100vh; /* Set the height of the grid container to fill the viewport */
+  }
+  
+  .grid-containerForm::before,
+  .grid-containerForm::after {
+    content: "";
+    height: 100vh;
+ 
+  }
+  
+  .form-cell {
+    height: 100vh;
+    border: 2px solid black; 
+    background-color: #f2f2f2;
+    padding: 10px;
+  }
