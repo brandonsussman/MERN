@@ -22,7 +22,7 @@ router.post('/answer', async (req, res, next) => {
     }
 
     const survey = req.body.answer;
-    console.log(survey);
+   
     const answerArray = Object.entries(survey).map(([key, value]) => ({
       answer: value.value,
       question: value.order
@@ -42,6 +42,7 @@ router.post('/answer', async (req, res, next) => {
       answer: answer.answer,
       question: answer.question,
     }));
+    const existingAnswer = questionnaire.answers.find(answer => answer.userId === userId);
 
     questionnaire.answers.push({ userId, answers: answerDocuments });
     await questionnaire.save();
@@ -58,18 +59,16 @@ router.get('/answer', (req, res, next) => {
   const token = req.headers.authorization;
     jwt.verify(token, 'my_secret_key', (error, decoded) => {
       if (error) {
-        console.log(decoded);
         console.log('Error:', error);
         res.status(401).send('Unauthorized');
       } else {
-        console.log("userid:",decoded.userId);
+
         Questionnaire.findById(req.query.questionnaireId)
         .then((questionnaire)=>{
           const userAnswer = questionnaire.answers.find(answer => answer.toString() === decoded.userId.toString());
           if (!userAnswer) {
- 
-     res.send(false);
-    }
+                 res.send(false);
+                 }
             else {
           res.send(true);
             }

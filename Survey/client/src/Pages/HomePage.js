@@ -7,8 +7,6 @@ function HomePage() {
   return (
     <div>
       <Menu></Menu>
-      <h1>Welcome to My App</h1>
-      <p>Please login or register to continue</p>
       <div>
       <div>
 <SearchBar></SearchBar>
