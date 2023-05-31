@@ -49,6 +49,7 @@ router.post('/answer', async (req, res, next) => {
 
     res.status(201).json({ message: 'Answers stored successfully.' });
   } catch (error) {
+    console.log(req.body);
     console.error('Error storing answers:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }

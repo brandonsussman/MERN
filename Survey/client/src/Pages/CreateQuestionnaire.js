@@ -27,7 +27,11 @@ function CreateQuestionnaire() {
     newQuestions[questionIndex].options[optionIndex].value = e.target.value;
     setQuestions(newQuestions);
   };
-
+  const handleRangeOptionChange = (option, index, e) => {
+    const newQuestions = [...questions];
+    newQuestions[index][option] = e.target.value;
+    setQuestions(newQuestions);
+  };
   const handleAddQuestion = () => {
     const newQuestion = { text: '', type: 'text', options: [], order: questions.length};
     const newQuestions = [...questions, newQuestion];
@@ -85,6 +89,11 @@ function CreateQuestionnaire() {
     <div>
       <h2>{title}</h2>
       <form onSubmit={handleSubmit}>
+      <label>
+          Survey Title:
+          <input type="text" value={title} onChange={handleTitleChange} />
+        </label>
+        <br />
         {questions.map((question, index) => (
           <div key={index}>
             <p>{question.text}</p>
@@ -111,17 +120,42 @@ function CreateQuestionnaire() {
                 onChange={(e) => handleQuestionChange(e, index)}
               />
             )}
-            {question.type === 'range' && (
-              <input
-                type="text"
-                name={index}
-                min={question.min}
-                max={question.max}
-                step={question.step}
-                value={question.text}
-                onChange={(e) => handleQuestionChange(e, index)}
-              />
-            )}
+         {question.type === 'range' && (
+  <div>
+    <label htmlFor={index}>{question.text}</label>
+    <input
+      type="text"
+      name={index}
+      min={question.min}
+      max={question.max}
+      step={question.step}
+      value={question.text}
+      onChange={(e) => handleQuestionChange(e, index)}
+    />
+    <label htmlFor={`${index}-min`}>Min:</label>
+    <input
+      type="text"
+      id={`${index}-min`}
+      value={question.min}
+      onChange={(e) => handleRangeOptionChange('min', index, e)}
+    />
+    <label htmlFor={`${index}-max`}>Max:</label>
+    <input
+      type="text"
+      id={`${index}-max`}
+      value={question.max}
+      onChange={(e) => handleRangeOptionChange('max', index, e)}
+    />
+    <label htmlFor={`${index}-step`}>Step:</label>
+    <input
+      type="text"
+      id={`${index}-step`}
+      value={question.step}
+      onChange={(e) => handleRangeOptionChange('step', index, e)}
+    />
+  </div>
+)}
+
             {question.type === 'radio' && (
                   <input
                   type="text"
@@ -167,11 +201,7 @@ function CreateQuestionnaire() {
           Add Question
         </button>
         <br />
-        <label>
-          Survey Title:
-          <input type="text" value={title} onChange={handleTitleChange} />
-        </label>
-        <br />
+      
         <button type="submit">Submit</button>
       </form>
     </div>
