@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Menu from './..//Menu.js';
+import Menu from '../Components/Menu.js';
 import '../CSS/Questionnaire.css'
 const MyForm = () => {
   const location = useLocation();

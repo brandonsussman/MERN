@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import Cookies from 'js-cookie';
-
+import "../CSS/Menu.css"
 function Menu() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -32,33 +32,31 @@ function Menu() {
   function handleLogout() {
     Cookies.remove('token');
     setIsLoggedIn(false);
-   
   }
 
   return (
-    <nav>
-      <ul>
+    <nav className="menu">
+      <ul className="menu-list">
         <li>
-          <NavLink exact to="/">Home</NavLink>
+          <NavLink exact to="/" className="menu-link">Home</NavLink>
         </li>
-     
-         
         {isLoggedIn ? (
-          <div>
-               <li>
-             <NavLink to="/user">Profile</NavLink>
-           </li>
-           <li>
-             <NavLink to="/createQuestionnaire">Create Questionnaire</NavLink>
-           </li>
-          <li>
-            <button onClick={handleLogout}>Logout</button>
-          </li>
-          
-           </div>
+          <div className="inner-container">
+            <li>
+              <NavLink to="/user" className="menu-link">Profile</NavLink>
+            </li>
+            <li>
+              <NavLink to="/createQuestionnaire" className="menu-link">Create Questionnaire</NavLink>
+            </li>
+            <li>
+              <div>
+              <button onClick={handleLogout} className="menu-logout">Logout</button>
+              </div>
+            </li>
+          </div>
         ) : (
           <li>
-            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/login" className="menu-link">Login</NavLink>
           </li>
         )}
       </ul>

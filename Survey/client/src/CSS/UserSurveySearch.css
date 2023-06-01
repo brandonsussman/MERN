@@ -1,0 +1,63 @@
+.user-survey-search-container {
+    margin: 20px;
+  }
+  
+  .search-bar-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .search-bar-container form {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+  }
+  
+  .search-bar-container input {
+    margin-right: 5px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .results-container {
+    max-height: 300px;
+    background-color: #ece3e3;
+    overflow-y: auto;
+  }
+  
+  .survey-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .survey-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    border-radius: 4px;
+  }
+  
+  .survey-list li sup {
+    font-size: 0.8em;
+    color: #888;
+    margin-left: 5px;
+  }
+  
+  .survey-list li button {
+    margin-left: 10px;
+    padding: 6px 10px;
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .survey-list li button:hover {
+    background-color: #45a049;
+  }
+  

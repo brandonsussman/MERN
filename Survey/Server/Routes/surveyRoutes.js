@@ -30,6 +30,7 @@ const verifyTokenReturnUser = async (token) => {
   }
 };
 
+
 const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
   try {
     query = {};
@@ -42,7 +43,7 @@ const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
     }
     if (creator) {
       query.creator = creator;
-      console.log(query);
+    
     }
     if(answeredBy){
     
@@ -101,6 +102,7 @@ router.get('/questionnaires', async (req, res) => {
       const token = req.headers.authorization;
       
       const user = await verifyTokenReturnUser(token);
+
      
       res.json(await searchQuestionnaires({search:req.query.search,creator:user._id}));
     } else {
@@ -121,7 +123,7 @@ router.get('/questionnairesAnswered', async (req, res) => {
       const token = req.headers.authorization;
       const user = await verifyTokenReturnUser(token);
       const search = req.query.search;
-       console.log(user._id);
+   
       
       res.json(await searchQuestionnaires({search:search,answeredBy:user._id}));
     } 
