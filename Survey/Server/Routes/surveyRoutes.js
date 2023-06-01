@@ -37,7 +37,7 @@ const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
     if(search){
 
     query.title={ $regex: search, $options: "i" };
-    console.log(query);
+  
 
     }
     if (creator) {
@@ -48,12 +48,12 @@ const searchQuestionnaires = async ({search, creator,answeredBy}={}) => {
     
 
       query["answers.userId"] = answeredBy;
-console.log(query);
+
     }
     
 
     const questionnaires = await Questionnaire.find(query);
-    console.log(questionnaires)
+    
 
     return questionnaires;
   } catch (err) {
@@ -87,7 +87,7 @@ router.post('/questionnaire', async (req, res) => {
     const newQuestionnaire = await questionnaire.save();
     res.status(201).json(newQuestionnaire);
   } catch (error) {
-    console.log(req.body.questionnaire);
+   
    console.log(error);
     res.status(401).send('Unauthorized.');
   }
