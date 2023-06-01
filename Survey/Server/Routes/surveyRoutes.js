@@ -120,9 +120,10 @@ router.get('/questionnairesAnswered', async (req, res) => {
       
       const token = req.headers.authorization;
       const user = await verifyTokenReturnUser(token);
+      const search = req.query.search;
        console.log(user._id);
       
-      res.json(await searchQuestionnaires({answeredBy:user._id}));
+      res.json(await searchQuestionnaires({search:search,answeredBy:user._id}));
     } 
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -41,9 +41,7 @@ function Menu() {
         <li>
           <NavLink exact to="/">Home</NavLink>
         </li>
-        <li>
-          <NavLink to="/questionnaire">Questionnaire</NavLink>
-        </li>
+     
          
         {isLoggedIn ? (
           <div>

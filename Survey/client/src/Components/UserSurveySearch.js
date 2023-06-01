@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import DownloadAnswers from './DownloadAnswers';
+
 function UserSurveySearch() {
   const [search, setSearch] = useState('');
   const [data, setData] = useState([]);
@@ -9,7 +10,6 @@ function UserSurveySearch() {
   const [error, setError] = useState(null);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const token = Cookies.get('token');
- 
 
   const useFetchData = (url) => {
     const fetchData = async (search) => {
@@ -20,10 +20,10 @@ function UserSurveySearch() {
         const response = await axios.get(url, {
           params: {
             search: search
-          },  headers:{
+          },
+          headers: {
             authorization: token
           }
-          
         });
         setData(response.data);
         setLoading(false);
@@ -43,16 +43,23 @@ function UserSurveySearch() {
     fetchData(search);
   };
 
+  const handleHideSurveys = () => {
+    setShowSearchBar(false);
+    setSearch('');
+    setData([]);
+    setLoading(false);
+    setError(null);
+  };
+
   return (
     <div>
-      {showSearchBar && (
+      {showSearchBar ? (
         <div>
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} />
           <button onClick={() => fetchData(search)}>Search</button>
+          <button onClick={handleHideSurveys}>Hide Surveys</button>
         </div>
-      )}
-
-      {!showSearchBar && (
+      ) : (
         <button onClick={handleShowSurveys}>Show Surveys</button>
       )}
 
@@ -63,8 +70,9 @@ function UserSurveySearch() {
       ) : (
         <ul>
           {data.map((item) => (
-            <li key={item._id}>{item.title}
-            <DownloadAnswers questionnaireId={item._id}></DownloadAnswers>
+            <li key={item._id}>
+              {item.title}
+              <DownloadAnswers questionnaireId={item._id}></DownloadAnswers>
             </li>
           ))}
         </ul>
