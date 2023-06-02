@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import '../CSS/CreateQuestionnaire.css';
 function CreateQuestionnaire() {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -86,126 +87,136 @@ function CreateQuestionnaire() {
 
 
   return (
-    <div>
-      <h2>{title}</h2>
+    <div className="create-questionnaire">
+      <h2>Create Your Survey Below</h2>
       <form onSubmit={handleSubmit}>
-      <label>
-          Survey Title:
-          <input type="text" value={title} onChange={handleTitleChange} />
-        </label>
-        <br />
+        <div className="form-group">
+          <label htmlFor="survey-title">Survey Title:</label>
+          <input
+            id="survey-title"
+            type="text"
+            value={title}
+            onChange={handleTitleChange}
+            className="form-control"
+          />
+        </div>
+  
         {questions.map((question, index) => (
-          <div key={index}>
-            <p>{question.text}</p>
-            <select value={question.type} onChange={(e) => handleTypeChange(e, index)}>
-              <option value="text">Text</option>
-              <option value="date">Date</option>
-              <option value="range">Range</option>
-              <option value="radio">Radio</option>
-              <option value="select">Select</option>
-            </select>
-            {question.type === 'text' && (
+          <div key={index} className="question">
+            <div className="form-group">
+              <label htmlFor={`question-${index}`}>Question:</label>
               <input
+                id={`question-${index}`}
                 type="text"
-                name={index}
                 value={question.text}
                 onChange={(e) => handleQuestionChange(e, index)}
+                className="form-control"
               />
-            )}
-            {question.type === 'date' && (
-              <input
-                type="text"
-                name={index}
-                value={question.text}
-                onChange={(e) => handleQuestionChange(e, index)}
-              />
-            )}
-         {question.type === 'range' && (
-  <div>
-    <label htmlFor={index}>{question.text}</label>
-    <input
-      type="text"
-      name={index}
-      min={question.min}
-      max={question.max}
-      step={question.step}
-      value={question.text}
-      onChange={(e) => handleQuestionChange(e, index)}
-    />
-    <label htmlFor={`${index}-min`}>Min:</label>
-    <input
-      type="text"
-      id={`${index}-min`}
-      value={question.min}
-      onChange={(e) => handleRangeOptionChange('min', index, e)}
-    />
-    <label htmlFor={`${index}-max`}>Max:</label>
-    <input
-      type="text"
-      id={`${index}-max`}
-      value={question.max}
-      onChange={(e) => handleRangeOptionChange('max', index, e)}
-    />
-    <label htmlFor={`${index}-step`}>Step:</label>
-    <input
-      type="text"
-      id={`${index}-step`}
-      value={question.step}
-      onChange={(e) => handleRangeOptionChange('step', index, e)}
-    />
-  </div>
-)}
-
-            {question.type === 'radio' && (
+            </div>
+  
+            <div className="form-group">
+              <label htmlFor={`type-${index}`}>Type:</label>
+              <select
+                id={`type-${index}`}
+                value={question.type}
+                onChange={(e) => handleTypeChange(e, index)}
+                className="form-control"
+              >
+                <option value="text">Text</option>
+                <option value="date">Date</option>
+                <option value="range">Range</option>
+                <option value="radio">Radio</option>
+                <option value="select">Select</option>
+              </select>
+            </div>
+  
+            {question.type === 'range' && (
+              <div className="range-options">
+                <div className="form-group">
+                  <label htmlFor={`min-${index}`}>Min:</label>
                   <input
-                  type="text"
-                  name={index}
-                  value={question.text}
-                  onChange={(e) => handleQuestionChange(e, index)}
-                />
-             )}
-             
-            
-            {question.type === 'select' && (
+                    id={`min-${index}`}
+                    type="text"
+                    value={question.min}
+                    onChange={(e) => handleRangeOptionChange('min', index, e)}
+                    className="form-control"
+                  />
+                </div>
+  
+                <div className="form-group">
+                  <label htmlFor={`max-${index}`}>Max:</label>
                   <input
-                  type="text"
-                  name={index}
-                  value={question.text}
-                  onChange={(e) => handleQuestionChange(e, index)}
-                />
-           
+                    id={`max-${index}`}
+                    type="text"
+                    value={question.max}
+                    onChange={(e) => handleRangeOptionChange('max', index, e)}
+                    className="form-control"
+                  />
+                </div>
+  
+                <div className="form-group">
+                  <label htmlFor={`step-${index}`}>Step:</label>
+                  <input
+                    id={`step-${index}`}
+                    type="text"
+                    value={question.step}
+                    onChange={(e) => handleRangeOptionChange('step', index, e)}
+                    className="form-control"
+                  />
+                </div>
+              </div>
             )}
-            <button type="button" onClick={() => handleRemoveQuestion(index)}>
+  
+            {(question.type === 'radio' || question.type === 'select') && (
+              <div className="options">
+                <button type="button" onClick={() => handleAddOption(index)} className="btn btn-secondary">
+                  Add Option
+                </button>
+                {question.options.map((option, optionIndex) => (
+                  <div key={optionIndex} className="option">
+                    <div className="form-group">
+                      <label htmlFor={`option-${index}-${optionIndex}`}>Option:</label>
+                      <input
+                        id={`option-${index}-${optionIndex}`}
+                        type="text"
+                        value={option.text}
+                        onChange={(e) => handleOptionChange(index, optionIndex, e)}
+                        className="form-control"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveOption(index, optionIndex)}
+                      className="btn btn-danger"
+                    >
+                      Remove Option
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+  
+            <button
+              type="button"
+              onClick={() => handleRemoveQuestion(index)}
+              className="btn btn-danger"
+            >
               Remove Question
             </button>
-            {(question.type === 'radio' || question.type === 'select') && (
-              <button type="button" onClick={() => handleAddOption(index)}>
-                Add Option
-              </button>
-            )}
-            {question.options.map((option, optionIndex) => (
-              <div key={optionIndex}>
-                <input
-                  type="text"
-                  value={option.text}
-                  onChange={(e) => handleOptionChange(index, optionIndex, e)}
-                />
-                <button type="button" onClick={() => handleRemoveOption(index, optionIndex)}>
-                  Remove Option
-                </button>
-              </div>
-            ))}
           </div>
         ))}
-        <button type="button" onClick={handleAddQuestion}>
+  
+        <button type="button" onClick={handleAddQuestion} className="btn btn-primary">
           Add Question
         </button>
-        <br />
-      
-        <button type="submit">Submit</button>
+  
+        <button type="submit" className="btn btn-success">
+          Submit
+        </button>
       </form>
     </div>
   );
+  
   
       }
 export default CreateQuestionnaire;

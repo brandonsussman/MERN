@@ -4,7 +4,6 @@ import HomePage from './Pages/HomePage';
 import LoginPage from './Pages/LoginPage';
 import RegisterPage from './Pages/RegisterPage';
 import Questionnaire from './Pages/Questionnaire';
-import DownloadAnswers from './Components/DownloadAnswers';
 import CreateQuestionnaire from './Pages/CreateQuestionnaire';
 import User from './Pages/User';
 
@@ -20,7 +19,7 @@ function App() {
         <Route path="/createquestionnaire" element={<CreateQuestionnaire />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/user" element={<User/>} />
-        <Route path="/DownloadAnswers" element={<DownloadAnswers/>} />
+     
       </Routes>
     </BrowserRouter>
   );

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Redirect, useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import "../CSS/Menu.css"
+import '../CSS/Menu.css';
+
 function Menu() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -29,11 +31,18 @@ function Menu() {
     }
   }, []);
 
+  useEffect(() => {
+    if ( isLoggedIn!=null && isLoggedIn!=true &&( (location.pathname === 'createquestionnaire')||(location.pathname === '/user'))) {
+    
+      window.location.href = '/';
+    }
+  }, [isLoggedIn]);
+
   function handleLogout() {
     Cookies.remove('token');
     setIsLoggedIn(false);
   }
-
+if(isLoggedIn!=null){
   return (
     <nav className="menu">
       <ul className="menu-list">
@@ -50,7 +59,7 @@ function Menu() {
             </li>
             <li>
               <div>
-              <button onClick={handleLogout} className="menu-logout">Logout</button>
+                <button onClick={handleLogout} className="menu-logout">Logout</button>
               </div>
             </li>
           </div>
@@ -62,6 +71,7 @@ function Menu() {
       </ul>
     </nav>
   );
+        }
 }
 
 export default Menu;
