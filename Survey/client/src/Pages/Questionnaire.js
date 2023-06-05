@@ -28,6 +28,7 @@ const MyForm = () => {
 
         // Create an object with default values for each question
         const defaultValues = {};
+        
         orderedQuestions.forEach((question) => {
           switch (question.type) {
             case 'text':
