@@ -42,9 +42,17 @@ router.post('/answer', async (req, res, next) => {
       answer: answer.answer,
       question: answer.question,
     }));
-    const existingAnswer = questionnaire.answers.find(answer => answer.userId === userId);
+    const userAnswerIndex = questionnaire.answers.findIndex(
+      (answer) => answer.userId.toString() === userId.toString()
+    );
 
-    questionnaire.answers.push({ userId, answers: answerDocuments });
+    if (userAnswerIndex !== -1) {
+      questionnaire.answers[userAnswerIndex].answers = answerDocuments;
+      console.log('Overwrite successful');
+    } else {
+      questionnaire.answers.push({ userId, answers: answerDocuments });
+    }
+
     await questionnaire.save();
 
     res.status(201).json({ message: 'Answers stored successfully.' });
@@ -73,7 +81,7 @@ router.get('/answer', (req, res, next) => {
                  res.send(false);
                  }
             else {
-              console.log("sending true");
+              
           res.send(true);
             }
           })

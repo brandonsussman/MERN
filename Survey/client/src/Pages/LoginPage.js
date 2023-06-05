@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/LoginPage.css';
+import Menu from '../Components/Menu.js';
+
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,7 +20,7 @@ function LoginPage() {
         Cookies.set('token', token);
         console.log(token);
         console.log(Cookies.get('token'));
-        navigate('/ThankYou');
+        navigate('/');
       })
       .catch((error) => {
         console.error(error);
@@ -26,7 +28,10 @@ function LoginPage() {
   };
 
   return (
+    <div>
+    <Menu></Menu>
     <div className="login-page">
+    
       <h1 className="login-page__title">Login</h1>
       <form className="login-page__form" onSubmit={handleLogin}>
         <label>
@@ -46,6 +51,7 @@ function LoginPage() {
         <button className="login-page__register-button">Register</button>
       </Link>
     </div>
+   </div>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import '../CSS/CreateQuestionnaire.css';
+import Menu from '../Components/Menu.js';
 function CreateQuestionnaire() {
   const [title, setTitle] = useState('');
   const [questions, setQuestions] = useState([]);
@@ -86,8 +87,11 @@ function CreateQuestionnaire() {
 
 
   return (
-    <div className="create-questionnaire">
+    <div>
+      <Menu></Menu>
       <h2>Create Your Survey Below</h2>
+    <div className="create-questionnaire">
+      
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="survey-title">Survey Title:</label>
@@ -102,7 +106,21 @@ function CreateQuestionnaire() {
   
         {questions.map((question, index) => (
           <div key={index} className="question">
+            <div className="question"></div>
             <div className="form-group">
+            <label htmlFor={`type-${index}`}>Type:</label>
+              <select
+                id={`type-${index}`}
+                value={question.type}
+                onChange={(e) => handleTypeChange(e, index)}
+                className="form-control"
+              >
+                <option value="text">Text</option>
+                <option value="date">Date</option>
+                <option value="range">Range</option>
+                <option value="radio">Radio</option>
+                <option value="select">Select</option>
+              </select>
               <label htmlFor={`question-${index}`}>Question:</label>
               <input
                 id={`question-${index}`}
@@ -117,25 +135,12 @@ function CreateQuestionnaire() {
                 onClick={() => handleRemoveQuestion(index)}
                 className="btn btn-danger"
               >
-                Remove Question
+                X
               </button>
+              
             </div>
   
-            <div className="form-group">
-              <label htmlFor={`type-${index}`}>Type:</label>
-              <select
-                id={`type-${index}`}
-                value={question.type}
-                onChange={(e) => handleTypeChange(e, index)}
-                className="form-control"
-              >
-                <option value="text">Text</option>
-                <option value="date">Date</option>
-                <option value="range">Range</option>
-                <option value="radio">Radio</option>
-                <option value="select">Select</option>
-              </select>
-            </div>
+            
   
             {question.type === 'range' && (
               <div className="range-options">
@@ -192,7 +197,7 @@ function CreateQuestionnaire() {
                         onClick={() => handleRemoveOption(index, optionIndex)}
                         className="btn btn-danger"
                       >
-                        Remove Option
+                       X
                       </button>
                     </div>
                   </div>
@@ -218,6 +223,8 @@ function CreateQuestionnaire() {
         </button>
       </form>
     </div>
+    </div>
+
   );
   
   
