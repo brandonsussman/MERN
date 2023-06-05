@@ -11,12 +11,25 @@ function RegisterPage() {
 
   const handleRegister = (event) => {
     event.preventDefault();
+
+    // Password validation regex pattern
+  const passwordRegex = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    alert('Password should be at least 8 characters long and contain at least one special character (!@#$%^&*)');
+    return;
+  }
     axios.post('http://localhost:8000/register', { name: name, email: email, password: password })
       .then((response) => {
         console.log(response.data);
+        window.alert('Registration successful.');
+        window.location.href = '/login';
       })
       .catch((error) => {
         console.error(error);
+        if(error.response.status===409){
+          window.alert("Please try a different email it seems an email with this account already exists");
+        }
       });
   };
 

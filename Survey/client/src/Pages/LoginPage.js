@@ -23,7 +23,12 @@ function LoginPage() {
         navigate('/');
       })
       .catch((error) => {
+        
         console.error(error);
+        if (error.response && error.response.status === 401) {
+          // Show a popup with the error message
+          alert('Incorrect login details.');
+        }
       });
   };
 

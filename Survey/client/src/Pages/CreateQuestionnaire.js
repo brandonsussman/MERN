@@ -64,6 +64,15 @@ function CreateQuestionnaire() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (title.trim() === '' || questions.some((question) => question.text.trim() === '')) {
+      window.alert('Please fill in all fields');
+      return;
+    }
+
+    if (questions.length === 0) {
+      window.alert('Please add at least one question');
+      return;
+    }
     const token = Cookies.get('token');
 
     const headers = {
@@ -74,7 +83,7 @@ function CreateQuestionnaire() {
     axios
       .post('http://localhost:8000/questionnaire', {questionnaire:questionnaire},{headers:headers})
       .then((response) => {
-        console.log('Questionnaire created successfully:', response.data);
+        window.alert('Questionnaire created successfully:', response.data);
         // Perform any additional actions after creating the questionnaire
       })
       .catch((error) => {

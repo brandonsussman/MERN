@@ -32,7 +32,7 @@ function Menu() {
   }, []);
 
   useEffect(() => {
-    if ( isLoggedIn!=null && isLoggedIn!==true &&( (location.pathname === '/createquestionnaire')||(location.pathname === '/user'))) {
+    if ( isLoggedIn!=null && isLoggedIn!==true &&( (location.pathname === '/createQuestionnaire')||(location.pathname === '/user'))) {
     
       window.location.href = '/';
     }
