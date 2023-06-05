@@ -84,13 +84,15 @@ function CreateQuestionnaire() {
       .post('http://localhost:8000/questionnaire', {questionnaire:questionnaire},{headers:headers})
       .then((response) => {
         window.alert('Questionnaire created successfully:', response.data);
-        // Perform any additional actions after creating the questionnaire
+        window.location.href = '/user'; // Navigate to user page
+
       })
       .catch((error) => {
 
-        console.log(questionnaire.questions);
+
         console.error('Failed to create questionnaire:', error);
-        // Handle the error condition
+        window.alert('Failed to create questionnaire:');
+     
       });
   };
 
