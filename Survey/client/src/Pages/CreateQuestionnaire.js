@@ -85,7 +85,6 @@ function CreateQuestionnaire() {
   };
 
 
-
   return (
     <div className="create-questionnaire">
       <h2>Create Your Survey Below</h2>
@@ -112,6 +111,14 @@ function CreateQuestionnaire() {
                 onChange={(e) => handleQuestionChange(e, index)}
                 className="form-control"
               />
+  
+              <button
+                type="button"
+                onClick={() => handleRemoveQuestion(index)}
+                className="btn btn-danger"
+              >
+                Remove Question
+              </button>
             </div>
   
             <div className="form-group">
@@ -169,9 +176,6 @@ function CreateQuestionnaire() {
   
             {(question.type === 'radio' || question.type === 'select') && (
               <div className="options">
-                <button type="button" onClick={() => handleAddOption(index)} className="btn btn-secondary">
-                  Add Option
-                </button>
                 {question.options.map((option, optionIndex) => (
                   <div key={optionIndex} className="option">
                     <div className="form-group">
@@ -183,26 +187,25 @@ function CreateQuestionnaire() {
                         onChange={(e) => handleOptionChange(index, optionIndex, e)}
                         className="form-control"
                       />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveOption(index, optionIndex)}
+                        className="btn btn-danger"
+                      >
+                        Remove Option
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveOption(index, optionIndex)}
-                      className="btn btn-danger"
-                    >
-                      Remove Option
-                    </button>
                   </div>
                 ))}
+                <button
+                  type="button"
+                  onClick={() => handleAddOption(index)}
+                  className="btn btn-secondary"
+                >
+                  Add Option
+                </button>
               </div>
             )}
-  
-            <button
-              type="button"
-              onClick={() => handleRemoveQuestion(index)}
-              className="btn btn-danger"
-            >
-              Remove Question
-            </button>
           </div>
         ))}
   
@@ -216,6 +219,7 @@ function CreateQuestionnaire() {
       </form>
     </div>
   );
+  
   
   
       }
