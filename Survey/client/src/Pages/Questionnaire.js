@@ -12,7 +12,7 @@ const MyForm = () => {
   const [questions, setQuestions] = useState([]);
   const [questionnaireId, setQuestionnaireId] = useState(searchParams.get('id'));
   const token = Cookies.get('token');
-  const [defaultValues,setDefaultValues]=useState([]);
+  
   const headers = {
     Authorization: token
   };
@@ -38,18 +38,12 @@ const MyForm = () => {
 
     // Check if answers already exist in the database
    
-    if (response.data.isAnswered) {
+
       const userPreviousAns=response.data.userAnswer.answers;
-      console.log(userPreviousAns);
-      // set default answers to existing answers
-      orderedQuestions.forEach((question,index) => {
-        pushDefaultValue(userPreviousAns[index].answer);
-       
+      const defaultValues={};
       
-      });
-     
-    }
-    else{
+    
+   
     
         // Create an object with default values for each question
         
@@ -57,8 +51,8 @@ const MyForm = () => {
         orderedQuestions.forEach((question,i) => {
           switch (question.type) {
             case 'text':
-              pushDefaultValue("");
-              window.alert(defaultValues[0]);
+              defaultValues[question._id] = { value: userPreviousAns[i].answer, order:i };
+
               break;
             case 'date':
 
@@ -77,8 +71,8 @@ const MyForm = () => {
               break;
           }
         });
-       
-      }});
+       setFormData(defaultValues);
+      });
      
       })
       .catch((error) => {
@@ -86,11 +80,8 @@ const MyForm = () => {
        
       });
   }, []);
-  const pushDefaultValue = (val) => {
-    const newArray = [...defaultValues]; 
-    newArray.push(val); 
-    setDefaultValues(newArray); 
-  };
+  
+  
   const handleChange = (event, order) => {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({
@@ -163,7 +154,8 @@ const MyForm = () => {
             return (
               <div key={question._id} className="form-group">
                 <label htmlFor={question._id} className="question-label">{question.text}</label>
-                <input value={formData[question._id]?.value ? formData[question._id]?.value : defaultValues[0]} type="text" name={question._id} className="text-input" onChange={(event) => handleChange(event, question.order)} />
+                <input value={formData[question._id]?.value ?formData[question._id]?.value:""} 
+                type="text" name={question._id} className="text-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'date':
