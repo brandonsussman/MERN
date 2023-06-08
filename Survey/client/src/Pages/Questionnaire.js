@@ -37,7 +37,7 @@ const MyForm = () => {
   .then((response) => {
 
     // Check if answers already exist in the database
-   
+   console.log(response.data.userAnswer.answers);
 
       const userPreviousAns=response.data.userAnswer.answers;
       const defaultValues={};
@@ -48,29 +48,29 @@ const MyForm = () => {
         // Create an object with default values for each question
         
         
-        orderedQuestions.forEach((question,i) => {
+        const getDefaultValue = (question, index) => {
+          const previousAnswer = userPreviousAns[index]?.answer;
           switch (question.type) {
             case 'text':
-              defaultValues[question._id] = { value: userPreviousAns[i].answer, order:i };
-
-              break;
+              return previousAnswer || '';
             case 'date':
-
-              defaultValues[question._id] = { value: new Date().toISOString().substr(0, 10), order: question.order };
-              break;
+              return previousAnswer || new Date().toISOString().substr(0, 10);
             case 'range':
-              defaultValues[question._id] = { value: question.min, order: question.order };
-              break;
+              return previousAnswer || question.min;
             case 'radio':
-              defaultValues[question._id] = { value: question.options[0].value, order: question.order };
-              break;
+              return previousAnswer || question.options[0].value;
             case 'select':
-              defaultValues[question._id] = { value: question.options[0].value, order: question.order };
-              break;
+              return previousAnswer || question.options[0].value;
             default:
-              break;
+              return '';
           }
+        };
+        
+        orderedQuestions.forEach((question, i) => {
+          const defaultValue = getDefaultValue(question, i);
+          defaultValues[question._id] = { value: defaultValue, order: question.order };
         });
+        
        setFormData(defaultValues);
       });
      
@@ -154,22 +154,26 @@ const MyForm = () => {
             return (
               <div key={question._id} className="form-group">
                 <label htmlFor={question._id} className="question-label">{question.text}</label>
-                <input value={formData[question._id]?.value ?formData[question._id]?.value:""} 
+                <input value={formData[question._id]?.value} 
                 type="text" name={question._id} className="text-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'date':
+            
             return (
               <div key={question._id} className="form-group">
                 <label htmlFor={question._id} className="question-label">{question.text}</label>
-                <input type="date" name={question._id} className="date-input" onChange={(event) => handleChange(event, question.order)} />
+                <input value={formData[question._id]?.value ? new Date(formData[question._id]?.value).toISOString().substr(0, 10) : new Date().toISOString().substr(0, 10)}
+
+                type="date" name={question._id} className="date-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'range':
             return (
               <div key={question._id} className="form-group">
+                
                 <label htmlFor={question._id} className="question-label">{question.text}</label>
-                <input type="range" name={question._id} min={question.min} max={question.max} step={question.step} className="range-input" onChange={(event) => handleChange(event, question.order)} />
+                <input value={formData[question._id]?.value} type="range" name={question._id} min={question.min} max={question.max} step={question.step} className="range-input" onChange={(event) => handleChange(event, question.order)} />
               </div>
             );
           case 'radio':
@@ -177,9 +181,18 @@ const MyForm = () => {
               <div key={question._id} className="form-group">
                 <p className="question-label">{question.text}</p>
                 {question.options.map((option) => (
+                  
                   <div key={option.value} className="radio-option">
+                 
+                   
                     <label htmlFor={option.value} className="option-label">{option.text}</label>
-                    <input type="radio" name={question._id} value={option.value} id={option.value} onChange={(event) => handleChange(event, question.order)} />
+                    <input type="radio" name={question._id}  
+      
+                   
+                     id={option.value} 
+                     value={option.value}
+                     checked={option.value===formData[question._id]?.value}
+                     onChange={(event) => handleChange(event, question.order)} />
                   </div>
                 ))}
               </div>
@@ -188,7 +201,9 @@ const MyForm = () => {
             return (
               <div key={question._id} className="form-group">
                 <label htmlFor={question._id} className="question-label">{question.text}</label>
-                <select name={question._id} className="select-input" onChange={(event) => handleChange(event, question.order)}>
+                <select name={question._id} 
+                value={formData[question._id]?.value}
+                className="select-input" onChange={(event) => handleChange(event, question.order)}>
                   {question.options.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.text}
