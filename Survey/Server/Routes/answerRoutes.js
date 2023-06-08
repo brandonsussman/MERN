@@ -78,11 +78,11 @@ router.get('/answer', (req, res, next) => {
      
           if (!userAnswer) {
 
-                 res.send(false);
+                 res.json({isAnswered:false});
                  }
             else {
               
-          res.send(true);
+          res.json({isAnswered:true,userAnswer:userAnswer});
             }
           })
           .catch((error) => {

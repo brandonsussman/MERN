@@ -11,10 +11,17 @@ const MyForm = () => {
   const [formData, setFormData] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [questionnaireId, setQuestionnaireId] = useState(searchParams.get('id'));
+  const token = Cookies.get('token');
+  const defaultValues = {};
+  const headers = {
+    Authorization: token
+  };
   useEffect(() => {
+   
     console.log(questionnaireId);
     axios.get('http://localhost:8000/questionnaire',
     { params: { questionnaireId: questionnaireId }})
+    
       .then((response) => {
         setQuestionnaireId(response.data._id);
          setTitle(response.data.title);
@@ -26,8 +33,21 @@ const MyForm = () => {
         });
         setQuestions(orderedQuestions);
 
+        axios.get('http://localhost:8000/answer', { params: { questionnaireId: questionnaireId }, headers: headers })
+  .then((response) => {
+
+    // Check if answers already exist in the database
+   
+    if (response.data.isAnswered) {
+      // set default answers to existing answers
+      console.log("here are existing answers hello");
+      console.log(response.data.userAnswer);
+
+    }
+    else{
+    
         // Create an object with default values for each question
-        const defaultValues = {};
+        
         
         orderedQuestions.forEach((question) => {
           switch (question.type) {
@@ -51,11 +71,12 @@ const MyForm = () => {
               break;
           }
         });
-
+      }});
         setFormData(defaultValues);
       })
       .catch((error) => {
         console.log(error);
+       
       });
   }, []);
 
@@ -70,35 +91,38 @@ const MyForm = () => {
   const handleSubmit = (event) => {
    
     event.preventDefault();
-    const token = Cookies.get('token');
+   
 
-    const headers = {
-      Authorization: token
-    };
+    
 
     axios.get('http://localhost:8000/answer', { params: { questionnaireId: questionnaireId }, headers: headers })
       .then((response) => {
 
         // Check if answers already exist in the database
      
-        if (response.data) {
+        if (response.data.isAnswered) {
           // Ask user if they want to overwrite their current answers
           if (window.confirm('You already have existing answers. Do you want to overwrite them?')) {
             // If user confirms, submit new answers to database
             axios.post('http://localhost:8000/answer', {questionnaireId: questionnaireId, answer: formData }, { headers: headers })
-
+            .then((response) => {
+              window.alert(response.data.message);
+              console.log(response.data.message);
+            })
               .catch((error) => {
                 console.error("error", error);
               });
           } else {
             // If user cancels, do not submit new answers to database
+            window.alert('Survey submission cancelled.');
             console.log('Survey submission cancelled.');
           }
         } else {
           // If no answers exist in the database, submit new answers
           axios.post('http://localhost:8000/answer', { answer: formData, questionnaireId: questionnaireId }, { headers: headers })
             .then((response) => {
-              console.log(response.data);
+              window.alert(response.data.message);
+              console.log(response.data.message);
             })
             .catch((error) => {
               console.error(error);
