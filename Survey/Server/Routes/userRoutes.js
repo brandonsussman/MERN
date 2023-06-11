@@ -44,6 +44,26 @@ router.get('/check-login', (req, res) => {
 });
 
 
+router.get('/user-email', (req, res) => {
+  const userId = req.query.userId;
+
+  User.findById(userId, 'email')
+    .then(user => {
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+
+      const userEmail = user.email;
+      res.json({ email: userEmail });
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    });
+});
+
+
 router.post('/login', (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then((user) => {
