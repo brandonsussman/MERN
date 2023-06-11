@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../CSS/SearchBar.css';
@@ -8,32 +8,6 @@ const SearchBar = () => {
   const [data, setData] = useState([]);
   const [creatorEmails, setCreatorEmails] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/questionnaires', {
-          params: {
-            search: search
-          }
-        });
-        setData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, [search]);
-
-  useEffect(() => {
-    const fetchCreatorEmails = async () => {
-      const emails = await getCreatorEmails();
-      setCreatorEmails(emails);
-    };
-
-    fetchCreatorEmails();
-  }, [data]);
 
   const getCreatorEmails = async () => {
     const promises = data.map(async (survey) => {
@@ -54,20 +28,19 @@ const SearchBar = () => {
     return emails;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      axios.get('http://localhost:8000/questionnaires', {
+      const response = await axios.get('http://localhost:8000/questionnaires', {
         params: {
           search: search
         }
-      })
-      .then((response) => setData(response.data))
-      .catch(error => {
-        console.error(error);
       });
-    } catch(error) {
+      setData(response.data);
+      const emails = await getCreatorEmails();
+      setCreatorEmails(emails);
+    } catch (error) {
       console.error(error);
     }
   };
